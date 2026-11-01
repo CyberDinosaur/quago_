@@ -119,52 +119,6 @@ build/apps/quago_search \
 
 Omit `--enhancement_delta_path` to measure the unenhanced base graph.
 
-### Template variables
-
-| variable | default | meaning |
-| --- | --- | --- |
-| `BASE_DATA` / `QUERY` / `GT` | unset, required | base vectors, queries, ground truth |
-| `BASE_INDEX` / `BASE_FORMAT` | unset / `hnsw` | base graph and its format (`hnsw`, `nsg`, `quago`) |
-| `KNNG` | unset, required by `build_index.sh` | k-NN graph used for scoring and enhancement |
-| `DELTA_DIR` / `DELTA` | `results/` / derived | where the delta is written / read |
-| `OUT_DIR` | `results/` | search CSV output |
-| `QUAGO_BIN_DIR` | `build/apps` | directory holding the binaries |
-| `DIST` / `DATA_TYPE` | `l2` / `float` | metric (`l2`, `ip`, `cosine`) and vector type |
-| `STRATEGY` | `frontier` | region selector: `frontier`, `random`, or `none` to skip |
-| `METHOD` | `qmrng` | enhancement: `qmrng` or `knn` |
-| `RATIO` | `0.20` | fraction of points selected as the region |
-| `M_NHOOD` | `48` | region degree budget (the skeleton's R) |
-| `KNN_SIZE` | `20` | neighborhood size for scoring and the MST overlay; must be <= the KNNG's k |
-| `SEL_DIRS` | `8192` | number of spherical-code direction probes |
-| `SKELETON_L` / `SKELETON_ALPHA` | `100` / `1.2` | skeleton beam width and RobustPrune slack |
-| `BUILD_THREADS` / `SEARCH_THREADS` | `32` / `1` | thread counts |
-| `L_LIST` / `K_LIST` | `100 200 400` / `10` | search budget grid and k values |
-| `THETA` / `PATIENCE` / `MIN_HOPS` | `1.20` / `50` / `20` | early-stop knobs |
-| `FRONTIER` | `sorted` | `quago_search` frontier structure: `sorted` or `heap` |
-| `FORCE` | `0` | `1` rebuilds even if the delta exists |
-
-### Choosing parameters
-
-- `M_NHOOD` must exceed the base graph's average degree, otherwise the rebuilt region has no room and
-  the delta comes out near-empty.
-- `RATIO` trades coverage against build cost and graph size; 0.1–0.4 is the useful range.
-- `THETA` and `PATIENCE` are **not portable between datasets**: theta tracks distance concentration and
-  patience tracks top-k stall behavior. The defaults are a starting point — fit them on your own data
-  at your target recall. `PATIENCE` only takes effect at L >= 3000.
-- `--enhance_method knn` adds nothing when the base graph already contains the region's k-NN edges.
-
-## Binaries
-
-| binary | purpose |
-| --- | --- |
-| `quago_build` | load base graph + KNNG, score/select the region, enhance, write the delta |
-| `quago_search` | fixed-L search; `--frontier sorted\|heap` selects the frontier structure |
-| `quago_search_fast` | early stop: frontier ratio test (`--theta`) plus a stalled-top-k floor (`--patience`) that joins it at L >= 3000 |
-| `quago_search_frontier` | early stop with the ratio test only (`--theta`, no patience floor) |
-| `file_io_check` | smoke-test the fbin / ibin loaders |
-| `kmeans_run` | standalone k-means++ utility (MKL-backed); not part of the enhancement pipeline |
-
-Every binary documents its own arguments with `--help`.
 
 ## Input formats
 
