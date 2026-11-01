@@ -12,7 +12,6 @@ endfunction()
 
 add_quago_app(quago_build   quago_build.cpp)
 add_quago_app(quago_search  quago_search.cpp)
-add_quago_app(quago_search_frontier  quago_search_frontier.cpp)
 add_quago_app(quago_search_fast      quago_search_fast.cpp)
 add_quago_app(file_io_check tools/file_io_check.cpp)
 add_quago_app(kmeans_run    tools/kmeans_run.cpp)
