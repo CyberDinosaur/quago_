@@ -1,0 +1,55 @@
+# Build trees
+build/
+**/build/
+
+# Compiled objects and binaries
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.exe
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+CTestTestfile.cmake
+
+# Index / data artifacts: base graphs, enhancement deltas, KNNGs, vector and ground-truth bins.
+# These are produced by the build pipeline or supplied per dataset, never source.
+*.delta
+*.index
+*.graph
+*.fbin
+*.ibin
+*.npy
+*.npz
+
+# Measurement output: CSVs, raw passes, driver logs and generated figures.
+# Regenerate with scripts/search.sh + scripts/search_fast.sh, or your own runner
+# built on scripts/env.sh.
+results/
+_logs/
+*.log
+
+app/tools/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Temporary files
+*.tmp
+*.bak
